@@ -1,3 +1,6 @@
+import User from "../Model/UserModel";
+import Errorhandler from "../utils/ErrorHandling";
+
 export const registerUser = catchAsyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
 
@@ -63,6 +66,20 @@ export const loginUser = catchAsyncError(async (req, res, next) => {
         user,
         token,
       });
+  } catch (error) {
+    next(error);
+  }
+});
+
+export const GetallUsers = catchAsyncError(async (req, res, next) => {
+  try {
+    const users = await User.find();
+
+    res.json({
+      success: true,
+      count: users.length,
+      users,
+    });
   } catch (error) {
     next(error);
   }
