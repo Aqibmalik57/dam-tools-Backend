@@ -1,7 +1,7 @@
-import User from "../Model/UserModel";
-import Errorhandler from "../utils/ErrorHandling";
+import User from "../Model/UserModel.js";
+import Errorhandler from "../utils/ErrorHandling.js";
 
-export const registerUser = catchAsyncError(async (req, res, next) => {
+export const registerUser = async (req, res, next) => {
   const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
@@ -34,9 +34,9 @@ export const registerUser = catchAsyncError(async (req, res, next) => {
     console.error("Registration error:", error);
     res.status(500).json({ message: "Server error during registration." });
   }
-});
+};
 
-export const loginUser = catchAsyncError(async (req, res, next) => {
+export const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
@@ -69,9 +69,9 @@ export const loginUser = catchAsyncError(async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+};
 
-export const GetallUsers = catchAsyncError(async (req, res, next) => {
+export const GetallUsers = async (req, res, next) => {
   try {
     const users = await User.find();
 
@@ -83,4 +83,4 @@ export const GetallUsers = catchAsyncError(async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+};
