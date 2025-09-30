@@ -2,10 +2,12 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import "./Utils/reminderCron.js";
 
 import Error from "./Middleware/Error.js";
 import mongoDb from "./Database/ConnectDb.js";
 import userRoute from "./Route/UserRoute.js";
+import todoRoute from "./Route/TodoRoute.js";
 import { v2 } from "cloudinary";
 
 process.on("uncaughtException", (err) => {
@@ -36,6 +38,7 @@ app.use(
 );
 
 app.use("/api/v1", userRoute);
+app.use("/api/v1", todoRoute);
 
 app.use(Error);
 

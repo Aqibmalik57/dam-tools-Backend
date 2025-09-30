@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema({
     default: null,
   },
 
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+
   profilePicture: {
     type: String,
   },
