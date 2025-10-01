@@ -1,9 +1,19 @@
 import cron from "node-cron";
 import moment from "moment-timezone";
 import Todo from "../Model/TodoModel.js";
+import axios from "axios";
 import { sendEmail } from "./TransportFile.js";
 
 const PK_TZ = "Asia/Karachi";
+
+const callTestApi = async () => {
+  try {
+    const response = await axios.get("http://localhost:8000/api/v1/test");
+    console.log("✅ Test API Response:", response.data);
+  } catch (error) {
+    console.error("❌ Error calling Test API:", error.message);
+  }
+};
 
 const sendTodoReminders = async (hour) => {
   try {
@@ -76,6 +86,15 @@ cron.schedule(
   () => {
     console.log("⏰ Running 5 PM reminder...");
     sendTodoReminders(17);
+  },
+  { timezone: PK_TZ }
+);
+
+cron.schedule(
+  "0 0 */12 * *",
+  () => {
+    console.log("🔄 Running Test API call (every 12 days)...");
+    callTestApi();
   },
   { timezone: PK_TZ }
 );

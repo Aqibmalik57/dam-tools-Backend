@@ -40,6 +40,14 @@ app.use(
 app.use("/api/v1", userRoute);
 app.use("/api/v1", todoRoute);
 
+app.get("/api/v1/test", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "🚀 Backend is working perfectly!",
+    timestamp: new Date().toISOString(),
+  });
+});
+
 app.use(Error);
 
 const server = app.listen(port, () => {
