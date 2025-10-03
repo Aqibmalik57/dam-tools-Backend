@@ -363,12 +363,7 @@ export const ForgotPassword = async (req, res, next) => {
       return next(new Errorhandler("Email and origin are required", 400));
     }
 
-    const allowedOrigins = [
-      "https://site1.com",
-      "https://site2.com",
-      "http://localhost:5173",
-      "http://localhost:5174",
-    ];
+    const allowedOrigins = ["http://localhost:3000"];
 
     if (!allowedOrigins.includes(origin)) {
       return next(new Errorhandler("Invalid origin provided", 403));
@@ -397,39 +392,47 @@ export const ForgotPassword = async (req, res, next) => {
     });
 
     const message = `
-  <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f6f9fc; padding: 40px;">
-    <div style="max-width: 620px; margin: auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+  <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg,#6d28d9,#2563eb,#0ea5e9); padding: 40px;">
+    <div style="max-width: 680px; margin: auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.15);">
       
-      <div style="background-color: #2a9d8f; color: #ffffff; padding: 30px 20px; text-align: center;">
-        <h1 style="margin: 0; font-size: 26px;">Reset Your Password</h1>
-        <p style="margin: 10px 0 0; font-size: 16px;">For your PlantixAG account</p>
+      <!-- Header -->
+      <div style="background: linear-gradient(135deg,#2563eb,#4f46e5,#7c3aed); color: #ffffff; padding: 35px 20px; text-align: center;">
+        <h1 style="margin: 0; font-size: 28px; font-weight: 700;">🔧 Dam Tools</h1>
+        <p style="margin: 8px 0 0; font-size: 16px; opacity: 0.95;">
+          Your all-in-one tools hub – TextUtils, TodoList, Calculator & more
+        </p>
       </div>
       
-      <div style="padding: 35px 30px; color: #333333;">
-        <p style="font-size: 16px;">Hi there,</p>
-        <p style="font-size: 16px; line-height: 1.6;">
-          We received a request to reset your password for your <strong>PlantixAG</strong> account. To proceed, click the button below:
+      <!-- Body -->
+      <div style="padding: 40px 32px; color: #333333;">
+        <h2 style="font-size: 22px; margin-bottom: 12px; color: #2563eb;">Reset Your Password</h2>
+        <p style="font-size: 16px; line-height: 1.6; margin: 0 0 20px;">
+          Hello,  
+          We received a request to reset the password for your <strong>Dam Tools</strong> account.  
+          To continue securely, click the button below:
         </p>
 
-        <div style="text-align: center; margin: 35px 0;">
-          <a href="${resetPasswordURL}" target="_blank" style="display: inline-block; padding: 14px 28px; background-color: #2a9d8f; color: #ffffff; text-decoration: none; font-weight: 600; border-radius: 6px; font-size: 16px; box-shadow: 0 3px 6px rgba(0,0,0,0.1);">
-            Reset Password
+        <!-- Button -->
+        <div style="text-align: center; margin: 40px 0;">
+          <a href="${resetPasswordURL}" target="_blank" style="display: inline-block; padding: 16px 36px; background: linear-gradient(135deg,#2563eb,#4f46e5,#7c3aed); color: #ffffff; text-decoration: none; font-weight: 600; border-radius: 10px; font-size: 17px; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); transition: all 0.3s ease-in-out;">
+            🔑 Reset Password
           </a>
         </div>
 
-        <p style="font-size: 15px; color: #555555;">
-          If you didn’t request this password reset, feel free to ignore this message — your account is still secure.
+        <p style="font-size: 15px; color: #555555; margin-top: 10px;">
+          If you didn’t request this reset, you can safely ignore this email.  
+          Your account remains secure.
         </p>
 
         <p style="margin-top: 30px; font-size: 15px;">
-          Best regards,<br/>
-          <strong>The PlantixAG Team</strong>
+          Stay productive,<br/>
+          <strong>The Dam Tools Team</strong>
         </p>
       </div>
 
-      <div style="background-color: #f2f4f6; text-align: center; padding: 20px; font-size: 13px; color: #999999;">
-        &copy; ${new Date().getFullYear()} PlantixAG. All rights reserved.<br/>
-        <span style="font-size: 12px;">Need help? Contact us at <a href="mailto:support@plantixag.com" style="color: #2a9d8f; text-decoration: none;">support@plantixag.com</a></span>
+      <!-- Footer -->
+      <div style="background-color: #f9fafb; text-align: center; padding: 22px; font-size: 13px; color: #666666;">
+        <p style="margin: 0; font-size: 13px;">&copy; \${new Date().getFullYear()} Dam Tools. All rights reserved.</p>
       </div>
 
     </div>

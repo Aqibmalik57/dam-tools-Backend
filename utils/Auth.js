@@ -6,7 +6,7 @@ export const isUserLoggedin = async (req, res, next) => {
   const { token } = req.cookies;
 
   if (!token) {
-    return next(new Errorhandler("Please login to access this page."));
+    return next(new Errorhandler("Please login to perform this task", 401));
   }
 
   const Decode = jwt.verify(token, process.env.JwT_Secret);

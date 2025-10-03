@@ -60,6 +60,8 @@ const userSchema = new mongoose.Schema({
     default: null,
   },
 
+  todos: [{ type: mongoose.Schema.Types.ObjectId, ref: "Todo" }],
+
   isVerified: {
     type: Boolean,
     default: false,

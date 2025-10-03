@@ -4,15 +4,18 @@ import {
   createTodo,
   deleteTodo,
   editTodo,
-  markTodoCompleted,
+  getAllTodos,
+  toggleTodoCompleted,
 } from "../Controller/TodoController.js";
+import { isUserLoggedin } from "../utils/Auth.js";
 
 const router = express.Router();
 
-router.post("/createTodos", createTodo);
-router.put("/editTodos/:id", editTodo);
-router.patch("/todos/:id/complete", markTodoCompleted);
-router.delete("/deleteTodos/:id", deleteTodo);
-router.delete("/clearAllTodos", clearAllTodos);
+router.post("/createTodos", isUserLoggedin, createTodo);
+router.put("/editTodos/:id", isUserLoggedin, editTodo);
+router.patch("/todos/:id/toggle_status", isUserLoggedin, toggleTodoCompleted);
+router.delete("/deleteTodos/:id", isUserLoggedin, deleteTodo);
+router.delete("/clearAllTodos", isUserLoggedin, clearAllTodos);
+router.get("/getallTodos/:id", isUserLoggedin, getAllTodos);
 
 export default router;
