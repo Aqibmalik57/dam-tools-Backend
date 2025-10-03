@@ -16,18 +16,15 @@ const client = new OAuth2Client(
 
 export const googleLogin = async (req, res, next) => {
   const { code } = req.body;
+
   if (!code) {
     return next(new Errorhandler("Authorization code is required", 400));
   }
 
   try {
-    console.log("📥 Received code:", code);
-
-    // Exchange code for tokens using the code only
     const { tokens } = await client.getToken(code);
-    console.log("✅ Tokens received");
 
-    if (!tokens.id_token) {
+    if (!tokens || !tokens.id_token) {
       return next(new Errorhandler("Missing ID token", 400));
     }
 
@@ -48,9 +45,8 @@ export const googleLogin = async (req, res, next) => {
     }
 
     const jwtToken = user.getJWTtoken();
-    console.log("🔐 JWT generated");
 
-    res
+    return res
       .status(200)
       .cookie("token", jwtToken, {
         expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
@@ -60,7 +56,12 @@ export const googleLogin = async (req, res, next) => {
       })
       .json({ success: true, message: "Google login successful.", data: user });
   } catch (error) {
-    console.error("🚨 Google login error:", error);
+    console.error("🚨 Google login error (detailed):", {
+      message: error.message,
+      stack: error.stack,
+      code: error.code,
+      response: error.response && error.response.data,
+    });
     return next(new Errorhandler("Failed to login with Google", 500));
   }
 };
@@ -198,7 +199,7 @@ export const updateProfile = async (req, res, next) => {
 
       const result = await new Promise((resolve, reject) => {
         const stream = v2.uploader.upload_stream(
-          { resource_type: "image", folder: "profile_pictures" },
+          { resource_type: "image", folder: "dam-profile_pictures" },
           (error, result) => {
             if (error) reject(error);
             else resolve(result);

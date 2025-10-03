@@ -4,13 +4,21 @@ import validator from "validator";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 
+function generateUniqueUserId() {
+  const random = crypto.randomBytes(3).toString("hex");
+  return `USR-${Date.now()}-${random}`;
+}
+
 const userSchema = new mongoose.Schema({
   googleId: {
     type: String,
     default: null,
   },
 
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  userId: {
+    type: String,
+    unique: true, // make sure it's unique
+  },
 
   profilePicture: {
     type: String,
@@ -69,6 +77,11 @@ const userSchema = new mongoose.Schema({
 
 // 🔹 Hash password before saving
 userSchema.pre("save", async function (next) {
+  // Generate userId only if new
+  if (this.isNew && !this.userId) {
+    this.userId = generateUniqueUserId();
+  }
+
   if (this.isModified("password") && this.password) {
     this.password = await bcryptjs.hash(this.password, 10);
   }
