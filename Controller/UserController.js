@@ -47,12 +47,11 @@ export const googleLogin = async (req, res, next) => {
     const jwtToken = user.getJWTtoken();
 
     return res
-      .status(200)
       .cookie("token", jwtToken, {
-        expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "Lax",
+        secure: process.env.NODE_ENV === "production", // true only on https
+        sameSite: "None", // ✅ always use None since frontend & backend are on different origins
+        expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
       })
       .json({ success: true, message: "Google login successful.", data: user });
   } catch (error) {
@@ -84,10 +83,11 @@ export const registerUser = async (req, res, next) => {
     const token = newUser.getJWTtoken();
 
     res
-      .status(201)
       .cookie("token", token, {
-        expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
         httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // true only on https
+        sameSite: "None", // ✅ always use None since frontend & backend are on different origins
+        expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
       })
       .json({
         success: true,
@@ -120,8 +120,8 @@ export const loginUser = async (req, res, next) => {
     res
       .cookie("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production" ? true : false,
-        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+        secure: process.env.NODE_ENV === "production", // true only on https
+        sameSite: "None", // ✅ always use None since frontend & backend are on different origins
         expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
       })
       .json({
