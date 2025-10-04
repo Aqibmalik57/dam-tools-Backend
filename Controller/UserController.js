@@ -118,12 +118,11 @@ export const loginUser = async (req, res, next) => {
     const token = user.getJWTtoken();
 
     res
-      .status(200)
       .cookie("token", token, {
-        expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
         httpOnly: true,
-        sameSite: "None", // Must be None for cross-site
-        secure: true, // Must be true in production
+        secure: process.env.NODE_ENV === "production", // true on Vercel
+        sameSite: "None", // must be "None" for cross-site
+        expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // 15 days
       })
       .json({
         success: true,
@@ -154,9 +153,9 @@ export const Logout = async (req, res, next) => {
   try {
     res.cookie("token", "", {
       httpOnly: true,
-      expires: new Date(0),
+      secure: process.env.NODE_ENV === "production",
       sameSite: "None",
-      secure: true,
+      expires: new Date(0),
     });
 
     res.status(201).json({
