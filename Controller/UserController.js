@@ -122,8 +122,8 @@ export const loginUser = async (req, res, next) => {
       .cookie("token", token, {
         expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
         httpOnly: true,
-        sameSite: "None",
-        secure: true,
+        sameSite: "None", // Must be None for cross-site
+        secure: true, // Must be true in production
       })
       .json({
         success: true,
@@ -152,9 +152,11 @@ export const GetallUsers = async (req, res, next) => {
 
 export const Logout = async (req, res, next) => {
   try {
-    res.cookie("token", null, {
+    res.cookie("token", "", {
       httpOnly: true,
-      expires: new Date(Date.now()),
+      expires: new Date(0),
+      sameSite: "None",
+      secure: true,
     });
 
     res.status(201).json({
