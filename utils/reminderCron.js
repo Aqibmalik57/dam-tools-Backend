@@ -46,15 +46,18 @@ const sendTodoReminders = async (timeLabel) => {
 
       const tasksHtml = todos
         .map((todo) => {
-          const taskList = todo.subtasks
-            .map((t) => `<li style="margin:5px 0; font-size:15px;">${t}</li>`)
+          const subtaskTitles = todo.subtasks
+            .map(
+              (s) =>
+                `<li style="margin:6px 0; font-size:15px; color:#333;">${s.title}</li>`
+            )
             .join("");
+
           return `
-            <div style="background:#fff; padding:15px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); margin-bottom:15px;">
-              <h3 style="color:#333; margin-bottom:10px;">${todo.topic}</h3>
-              <ul style="padding-left:20px; margin:0;">${taskList}</ul>
-            </div>
-          `;
+      <ul style="padding-left:20px; margin:10px 0; list-style-type:circle;">
+        ${subtaskTitles}
+      </ul>
+    `;
         })
         .join("");
 
@@ -76,11 +79,11 @@ const sendTodoReminders = async (timeLabel) => {
     </div>
     
     <!-- Tasks Section -->
-    <div style="padding: 20px;">
+  <div style="padding:20px;">
       ${
         tasksHtml
           ? tasksHtml
-          : `<p style="color:#999; text-align:center;">No tasks scheduled for today! 🎉</p>`
+          : `<p style="color:#999; text-align:center;">No subtasks scheduled for today! 🎉</p>`
       }
     </div>
     
@@ -109,10 +112,10 @@ const sendTodoReminders = async (timeLabel) => {
 };
 
 // cron.schedule(
-//   "40 1 * * *",
+//   "40 21 * * *",
 //   () => {
-//     console.log("⏰ Running 1:40 AM reminder...");
-//     sendTodoReminders("01:40 PKT");
+//     console.log("⏰ Running 9:40 PM reminder...");
+//     sendTodoReminders("21:40 PKT");
 //   },
 //   { timezone: PK_TZ }
 // );
