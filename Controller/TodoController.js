@@ -24,7 +24,9 @@ export const createTodo = async (req, res) => {
 
     const newTodo = new Todo({
       topic,
-      subtasks,
+      subtasks: subtasks.map((s) =>
+        typeof s === "string" ? { title: s, done: false } : s
+      ),
       date: parsedDate,
       day,
       user: req.user._id,
@@ -63,7 +65,13 @@ export const editTodo = async (req, res) => {
     }
 
     if (req.body.topic !== undefined) todo.topic = req.body.topic;
-    if (req.body.subtasks !== undefined) todo.subtasks = req.body.subtasks;
+
+    if (req.body.subtasks !== undefined) {
+      todo.subtasks = req.body.subtasks.map((s) =>
+        typeof s === "string" ? { title: s, done: false } : s
+      );
+    }
+
     if (req.body.date !== undefined) {
       todo.date = new Date(req.body.date);
       const dayNames = [
@@ -90,6 +98,23 @@ export const editTodo = async (req, res) => {
   }
 };
 
+export const toggleSubtask = async (req, res) => {
+  try {
+    const { subtaskIndex } = req.body;
+    const { id: todoId } = req.params;
+
+    const todo = await Todo.findOne({ _id: todoId, user: req.user._id });
+    if (!todo) return res.status(404).json({ message: "Todo not found" });
+
+    todo.subtasks[subtaskIndex].done = !todo.subtasks[subtaskIndex].done;
+    await todo.save();
+
+    res.json({ message: "Subtask updated", todo });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating subtask", error });
+  }
+};
+
 export const toggleTodoCompleted = async (req, res) => {
   try {
     const { id } = req.params;
@@ -100,7 +125,6 @@ export const toggleTodoCompleted = async (req, res) => {
         .json({ message: "Please login to perform this action" });
     }
 
-    // Find the todo and toggle completed
     const todo = await Todo.findOne({ _id: id, user: req.user._id });
     if (!todo) {
       return res
@@ -108,7 +132,7 @@ export const toggleTodoCompleted = async (req, res) => {
         .json({ message: "Todo not found or you don't have permission" });
     }
 
-    todo.completed = !todo.completed; // toggle
+    todo.completed = !todo.completed;
     await todo.save();
 
     res.json({
