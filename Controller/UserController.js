@@ -363,7 +363,10 @@ export const ForgotPassword = async (req, res, next) => {
       return next(new Errorhandler("Email and origin are required", 400));
     }
 
-    const allowedOrigins = ["http://localhost:3000"];
+    const allowedOrigins = [
+      "http://localhost:3000",
+      "https://dam-notes-tools.vercel.app",
+    ];
 
     if (!allowedOrigins.includes(origin)) {
       return next(new Errorhandler("Invalid origin provided", 403));
