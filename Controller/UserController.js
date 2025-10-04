@@ -47,12 +47,11 @@ export const googleLogin = async (req, res, next) => {
     const jwtToken = user.getJWTtoken();
 
     return res
-      .status(200)
       .cookie("token", jwtToken, {
-        expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "Lax",
+        secure: process.env.NODE_ENV === "production", // true only on https
+        sameSite: "None", // ✅ always use None since frontend & backend are on different origins
+        expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
       })
       .json({ success: true, message: "Google login successful.", data: user });
   } catch (error) {
@@ -84,10 +83,11 @@ export const registerUser = async (req, res, next) => {
     const token = newUser.getJWTtoken();
 
     res
-      .status(201)
       .cookie("token", token, {
-        expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
         httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // true only on https
+        sameSite: "None", // ✅ always use None since frontend & backend are on different origins
+        expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
       })
       .json({
         success: true,
@@ -118,12 +118,11 @@ export const loginUser = async (req, res, next) => {
     const token = user.getJWTtoken();
 
     res
-      .status(200)
       .cookie("token", token, {
-        expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
         httpOnly: true,
-        sameSite: "None",
-        secure: true,
+        secure: process.env.NODE_ENV === "production", // true only on https
+        sameSite: "None", // ✅ always use None since frontend & backend are on different origins
+        expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
       })
       .json({
         success: true,
@@ -152,9 +151,11 @@ export const GetallUsers = async (req, res, next) => {
 
 export const Logout = async (req, res, next) => {
   try {
-    res.cookie("token", null, {
+    res.cookie("token", "", {
       httpOnly: true,
-      expires: new Date(Date.now()),
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "None",
+      expires: new Date(0),
     });
 
     res.status(201).json({
