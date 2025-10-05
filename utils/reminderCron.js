@@ -48,16 +48,24 @@ const sendTodoReminders = async (timeLabel) => {
         .map((todo) => {
           const subtaskTitles = todo.subtasks
             .map(
-              (s) =>
-                `<li style="margin:6px 0; font-size:15px; color:#333;">${s.title}</li>`
+              (s) => `
+              <li style="margin:6px 0; font-size:15px; color:${
+                s.done ? "#4CAF50" : "#E53935"
+              };">
+                ${s.done ? "✅" : "❌"} ${s.title}
+              </li>
+            `
             )
             .join("");
 
           return `
-      <ul style="padding-left:20px; margin:10px 0; list-style-type:circle;">
-        ${subtaskTitles}
-      </ul>
-    `;
+            <div style="margin-bottom:20px; border-left:4px solid #4CAF50; padding-left:10px;">
+              <h3 style="margin:0; font-size:18px; color:#333;">${todo.topic}</h3>
+              <ul style="padding-left:20px; margin:10px 0; list-style-type:none;">
+                ${subtaskTitles}
+              </ul>
+            </div>
+          `;
         })
         .join("");
 
@@ -79,7 +87,7 @@ const sendTodoReminders = async (timeLabel) => {
     </div>
     
     <!-- Tasks Section -->
-  <div style="padding:20px;">
+    <div style="padding:20px;">
       ${
         tasksHtml
           ? tasksHtml
