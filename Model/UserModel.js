@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
 
   userId: {
     type: String,
-    unique: true, // make sure it's unique
+    unique: true,
   },
 
   profilePicture: {
@@ -77,9 +77,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// 🔹 Hash password before saving
 userSchema.pre("save", async function (next) {
-  // Generate userId only if new
   if (this.isNew && !this.userId) {
     this.userId = generateUniqueUserId();
   }
@@ -90,20 +88,17 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// 🔹 Compare password method
 userSchema.methods.comparePassword = async function (password) {
   if (!this.password) return false;
   return await bcryptjs.compare(password, this.password);
 };
 
-// 🔹 JWT token generator
 userSchema.methods.getJWTtoken = function () {
   return jwt.sign({ id: this._id }, process.env.JwT_Secret, {
     expiresIn: process.env.JwT_Expire,
   });
 };
 
-// 🔹 Reset password token generator
 userSchema.methods.getResetPasswordToken = function () {
   const token = crypto.randomBytes(20).toString("hex");
 

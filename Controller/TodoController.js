@@ -34,7 +34,6 @@ export const createTodo = async (req, res) => {
 
     await newTodo.save();
 
-    // Add todo reference to user
     await User.findByIdAndUpdate(req.user._id, {
       $push: { todos: newTodo._id },
     });
@@ -162,7 +161,6 @@ export const deleteTodo = async (req, res) => {
         .json({ message: "Todo not found or you don't have permission" });
     }
 
-    // Remove reference from user
     await User.findByIdAndUpdate(req.user._id, { $pull: { todos: id } });
 
     res.json({ message: "Todo deleted successfully" });

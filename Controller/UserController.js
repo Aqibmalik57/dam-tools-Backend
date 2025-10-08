@@ -49,8 +49,8 @@ export const googleLogin = async (req, res, next) => {
     return res
       .cookie("token", jwtToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // true only on https
-        sameSite: "None", // ✅ always use None since frontend & backend are on different origins
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "None",
         expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
       })
       .json({ success: true, message: "Google login successful.", data: user });
@@ -85,8 +85,8 @@ export const registerUser = async (req, res, next) => {
     res
       .cookie("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // true only on https
-        sameSite: "None", // ✅ always use None since frontend & backend are on different origins
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "None",
         expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
       })
       .json({
@@ -120,8 +120,8 @@ export const loginUser = async (req, res, next) => {
     res
       .cookie("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // true only on https
-        sameSite: "None", // ✅ always use None since frontend & backend are on different origins
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "None",
         expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
       })
       .json({
