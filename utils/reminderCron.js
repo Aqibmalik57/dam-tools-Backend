@@ -70,7 +70,7 @@ const sendTodoReminders = async (timeLabel) => {
         .join("");
 
       const message = `
-<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#f0f4f8; padding:30px 0; color:#333;">
+<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding:30px 0; color:#333;">
   <div style="max-width:650px; margin: auto; background: #ffffff; border-radius:15px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.15);">
     
     <!-- Header -->
