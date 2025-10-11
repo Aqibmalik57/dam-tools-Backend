@@ -14,6 +14,7 @@ import {
   updatePassword,
   updateProfile,
   updateUserProfile,
+  updateUserTheme,
 } from "../Controller/UserController.js";
 import { isAuthenticated, isUserLoggedin } from "../utils/Auth.js";
 import { upload } from "../utils/Multer.js";
@@ -54,5 +55,6 @@ router.put(
 );
 router.post("/forgotPassword", ForgotPassword);
 router.post("/resetPassword/:token", ResetPassword);
+router.put("/theme/:id", isUserLoggedin, updateUserTheme);
 
 export default router;

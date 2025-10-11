@@ -506,3 +506,39 @@ export const ResetPassword = async (req, res, next) => {
     message: "Password reset successfully",
   });
 };
+
+export const updateUserTheme = async (req, res) => {
+  try {
+    const { theme } = req.body;
+    const userId = req.params.id;
+
+    if (!["light", "dark"].includes(theme)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid theme value. Allowed values are 'light' or 'dark'.",
+      });
+    }
+
+    const user = await User.findByIdAndUpdate(userId, { theme }, { new: true });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Theme updated successfully",
+      theme: user.theme,
+    });
+  } catch (error) {
+    console.error("Error updating theme:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while updating theme",
+      error: error.message,
+    });
+  }
+};

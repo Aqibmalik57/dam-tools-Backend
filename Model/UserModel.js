@@ -71,6 +71,12 @@ const userSchema = new mongoose.Schema({
 
   resetPasswordExpires: Date,
 
+  theme: {
+    type: String,
+    enum: ["light", "dark"],
+    default: "light",
+  },
+
   createdAt: {
     type: Date,
     default: Date.now,
