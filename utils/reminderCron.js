@@ -5,6 +5,7 @@ import { sendEmail } from "./TransportFile.js";
 import User from "../Model/UserModel.js";
 import dotenv from "dotenv";
 import axios from "axios";
+import Timer from "../Model/TimerModel.js";
 
 dotenv.config();
 
@@ -75,7 +76,7 @@ const sendTodoReminders = async (timeLabel) => {
     
     <!-- Header -->
     <div style="background: linear-gradient(135deg, #4CAF50, #81C784); padding: 20px; text-align:center;">
-      <h1 style="color:#fff; margin:0; font-size:28px;">📌 Todo Reminder</h1>
+      <h1 style="color:#fff; margin:0; font-size:28px;">Todo Reminder</h1>
       <p style="color:#e8f5e9; font-size:16px; margin-top:5px;">Stay on track with your tasks today!</p>
     </div>
     
@@ -151,6 +152,79 @@ cron.schedule(
   () => {
     console.log("🔄 Running Test API call (every 12 days)...");
     callTestApi();
+  },
+  { timezone: PK_TZ }
+);
+
+const sendTimerMails = async () => {
+  try {
+    const now = moment().tz(PK_TZ);
+    const expiredTimers = await Timer.find({
+      isNotified: false,
+      targetTime: { $lte: now.toDate() },
+    }).populate("user");
+
+    for (const timer of expiredTimers) {
+      if (!timer.user || !timer.user.email) continue;
+      const msg = `
+  <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7fb; padding: 10px;">
+    <div style="max-width: 700px; margin: auto; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+      
+      <!-- Header Section -->
+      <div style="background: linear-gradient(135deg, #4CAF50, #2E7D32); padding: 30px 20px; text-align: center; color: #fff;">
+        <h1 style="margin: 0; font-size: 28px;">Your Countdown Has Ended!</h1>
+        <p style="margin-top: 8px; font-size: 16px; color: #e8f5e9;">A friendly reminder from DAM Tools</p>
+      </div>
+
+      <!-- Body Section -->
+      <div style="padding: 30px 25px; color: #333; line-height: 1.6;">
+        <p style="font-size: 17px;">Hey <strong>${timer.user.name}</strong>,</p>
+        <p style="font-size: 16px;">Your timer has just reached its target time. Here are the details:</p>
+
+        <div style="background: #f0f8f5; border-left: 5px solid #4CAF50; padding: 15px 20px; border-radius: 8px; margin: 20px 0;">
+          <p style="margin: 5px 0; font-size: 15px;">
+            <strong>Target Time:</strong> ${moment(timer.targetTime).format(
+              "YYYY-MM-DD hh:mm A"
+            )}
+          </p>
+        </div>
+
+        <p style="font-size: 16px;">Remember, every second counts — use this moment to review your progress or move to your next goal. Stay focused, and keep the momentum going!</p>
+
+        <div style="margin-top: 25px; text-align: center;">
+          <a href="https://dam-notes-tools.vercel.app/" style="background: linear-gradient(135deg, #4CAF50, #2E7D32); color: #fff; padding: 12px 25px; border-radius: 25px; text-decoration: none; font-weight: 600; font-size: 15px; display: inline-block;">
+            Open DAM Tools
+          </a>
+        </div>
+      </div>
+
+      <!-- Footer Section -->
+      <div style="background: #f7f9fc; text-align: center; padding: 20px 15px; font-size: 13px; color: #777;">
+        <hr style="border:none; border-top:1px solid #e0e0e0; margin-bottom:15px;">
+        <p style="margin: 0;">Sent by <strong>DAM Tools</strong></p>
+        <p style="margin: 5px 0;">Boost your productivity — one timer at a time ⏳</p>
+      </div>
+
+    </div>
+  </div>
+`;
+
+      await sendEmail(timer.user.email, "⏰ Your Countdown Timer Ended", msg);
+
+      timer.isNotified = true;
+      await timer.save();
+
+      console.log(`📨 Timer ended email sent to ${timer.user.email}`);
+    }
+  } catch (error) {
+    console.error("❌ Error checking timers:", error);
+  }
+};
+
+cron.schedule(
+  "* * * * *",
+  () => {
+    sendTimerMails();
   },
   { timezone: PK_TZ }
 );
