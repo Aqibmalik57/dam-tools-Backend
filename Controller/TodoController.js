@@ -132,6 +132,19 @@ export const toggleTodoCompleted = async (req, res) => {
     }
 
     todo.completed = !todo.completed;
+
+    if (todo.completed) {
+      todo.subtasks = todo.subtasks.map((subtask) => ({
+        ...subtask.toObject(),
+        done: true,
+      }));
+    } else {
+      todo.subtasks = todo.subtasks.map((subtask) => ({
+        ...subtask.toObject(),
+        done: false,
+      }));
+    }
+
     await todo.save();
 
     res.json({
