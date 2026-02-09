@@ -26,7 +26,7 @@ export const isAuthenticated = (role) => {
 
     if (req.user.role !== role) {
       return next(
-        new Errorhandler("Access denied , You are not authenticated", 403)
+        new Errorhandler("Access denied , You are not authenticated", 403),
       );
     }
 

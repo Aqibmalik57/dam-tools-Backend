@@ -33,9 +33,13 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://dam-notes-tools.vercel.app"],
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "https://dam-notes-tools.vercel.app",
+    ],
     credentials: true,
-  })
+  }),
 );
 
 app.use("/api/v1", userRoute);

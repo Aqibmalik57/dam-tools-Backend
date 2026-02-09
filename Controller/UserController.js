@@ -11,7 +11,7 @@ dotenv.config();
 const client = new OAuth2Client(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
-  "postmessage"
+  "postmessage",
 );
 
 export const googleLogin = async (req, res, next) => {
@@ -204,7 +204,7 @@ export const updateProfile = async (req, res, next) => {
           (error, result) => {
             if (error) reject(error);
             else resolve(result);
-          }
+          },
         );
         stream.end(Buffer.from(imageBase64, "base64"));
       });
@@ -223,7 +223,7 @@ export const updateProfile = async (req, res, next) => {
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
       updatedData,
-      { new: true }
+      { new: true },
     );
 
     res.status(201).json({
@@ -243,7 +243,7 @@ export const updatePassword = async (req, res, next) => {
 
     if (!oldPassword || !Password || !ConfirmPassword) {
       return next(
-        new Errorhandler("Please provide all the required fields", 400)
+        new Errorhandler("Please provide all the required fields", 400),
       );
     }
 
@@ -366,6 +366,7 @@ export const ForgotPassword = async (req, res, next) => {
 
     const allowedOrigins = [
       "http://localhost:3000",
+      "http://localhost:3001",
       "https://dam-notes-tools.vercel.app",
     ];
 
@@ -479,7 +480,7 @@ export const ResetPassword = async (req, res, next) => {
 
   if (!user || !user.resetPasswordExpires) {
     return next(
-      new Errorhandler("Invalid or expired reset password token", 400)
+      new Errorhandler("Invalid or expired reset password token", 400),
     );
   }
 
@@ -487,7 +488,7 @@ export const ResetPassword = async (req, res, next) => {
 
   if (!newPassword || !confirmPassword) {
     return next(
-      new Errorhandler("Please provide new and confirm password", 400)
+      new Errorhandler("Please provide new and confirm password", 400),
     );
   }
 
